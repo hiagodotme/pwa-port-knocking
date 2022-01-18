@@ -1,0 +1,68 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button [text]="getBackButtonText()" defaultHref="/"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" *ngIf="config">
+  <ion-item>
+    <ion-icon class="icon-cloud" name="cloudy-outline" color="primary"></ion-icon>
+
+    <ion-label class="ion-text-wrap">
+      <h2>
+        {{ config.name }}
+        <span class="date">
+          <ion-note>{{ config.createdAt | date: 'dd/MM/yyyy' }}</ion-note>
+        </span>
+      </h2>
+      <h3>IP: <ion-note>{{ config.ip }}</ion-note></h3>
+    </ion-label>
+
+    <ion-icon class="eye-icon" (click)="isVisibleData = !isVisibleData" [name]="isVisibleData ? 'eye-outline' : 'eye-off-outline'" color="warning"></ion-icon>
+
+  </ion-item>
+
+  <div class="ion-padding">
+
+    <ion-list>
+      <ion-item-sliding *ngFor="let s of config.secret; let idx = index">
+        <ion-item >
+          <ion-icon *ngIf="stageControl?.length === 0" name="ellipsis-horizontal-circle-outline" slot="start"></ion-icon>
+          <ion-icon *ngIf="stageControl?.length > 0" [ngClass]="{'success': ((stageControl?.length - 1) === idx)}" [name]="((stageControl?.length - 1) === idx) ? 'checkmark-circle-outline' : 'bowling-ball-outline' " slot="start"></ion-icon>
+          <div style="width: 100%;">
+            <span style="float: left;">{{config.ip}}:<span *ngIf="isVisibleData">{{s.port}}</span><span *ngIf="!isVisibleData">*****</span></span>
+            <span style="float: right;" *ngIf="s.time > 0"><ion-icon name="time-outline"></ion-icon> {{s.time}}s</span>
+          </div>
+        </ion-item>
+
+        <ion-item-options side="end">
+          <ion-item-option (click)="formPort(idx, s)" color='primary'>Edit</ion-item-option>
+          <ion-item-option (click)="remove(idx)" color='danger'>Remove</ion-item-option>
+        </ion-item-options>
+      </ion-item-sliding>
+    </ion-list>
+
+
+    <p *ngIf="config?.secret?.length > 0">Note: Drag to the side to remove/edit.</p>
+    <p *ngIf="config?.secret?.length === 0">Use the button below to add a port.</p>
+    <p style="color: white; text-align: center; background: green; padding: 20px;" *ngIf="stageControl?.length > 0 && stageControl?.length === config?.secret?.length">
+      <ion-icon style="width: 40px; height: 40px; font-size: 40px;" name="checkmark-circle-outline"></ion-icon>
+      <br />
+      <span style="margin-top: -15px;">Port Knocking execution is finished!</span>
+    </p>
+    <br />
+
+    <ion-button expand="full" color='primary' [disabled]="isExecuting" (click)="formPort()">
+      <ion-icon name="add-outline"></ion-icon>&nbsp;&nbsp;Add Port
+    </ion-button>
+    <ion-button expand="full" color='success' [disabled]="isExecuting" (click)="executeKnocking()">
+      <ion-icon name="play-outline"></ion-icon>&nbsp;&nbsp;Execute
+    </ion-button>
+
+    <div style="display: none;">
+      <img [src]="stage?.src" *ngFor="let stage of stageControl" />
+    </div>
+  </div>
+</ion-content>

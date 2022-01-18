@@ -1,83 +1,71 @@
 import { Injectable } from '@angular/core';
 
-export interface Message {
-  fromName: string;
-  subject: string;
-  date: string;
+export interface PortKnockConfig {
   id: number;
-  read: boolean;
+  name: string;
+  ip: string;
+  createdAt: Date;
+  secret: Array<PortKnockSecret>;
+}
+export interface PortKnockSecret {
+  port: number;
+  time: number;
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class DataService {
-  public messages: Message[] = [
-    {
-      fromName: 'Matt Chorsey',
-      subject: 'New event: Trip to Vegas',
-      date: '9:32 AM',
-      id: 0,
-      read: false
-    },
-    {
-      fromName: 'Lauren Ruthford',
-      subject: 'Long time no chat',
-      date: '6:12 AM',
-      id: 1,
-      read: false
-    },
-    {
-      fromName: 'Jordan Firth',
-      subject: 'Report Results',
-      date: '4:55 AM',
-      id: 2,
-      read: false
-    },
-    {
-      fromName: 'Bill Thomas',
-      subject: 'The situation',
-      date: 'Yesterday',
-      id: 3,
-      read: false
-    },
-    {
-      fromName: 'Joanne Pollan',
-      subject: 'Updated invitation: Swim lessons',
-      date: 'Yesterday',
-      id: 4,
-      read: false
-    },
-    {
-      fromName: 'Andrea Cornerston',
-      subject: 'Last minute ask',
-      date: 'Yesterday',
-      id: 5,
-      read: false
-    },
-    {
-      fromName: 'Moe Chamont',
-      subject: 'Family Calendar - Version 1',
-      date: 'Last Week',
-      id: 6,
-      read: false
-    },
-    {
-      fromName: 'Kelly Richardson',
-      subject: 'Placeholder Headhots',
-      date: 'Last Week',
-      id: 7,
-      read: false
-    }
-  ];
+  public configs: Array<PortKnockConfig> = [];
 
-  constructor() { }
-
-  public getMessages(): Message[] {
-    return this.messages;
+  constructor() {
+    this.configs = JSON.parse(localStorage.getItem('configs') || '[]');
   }
 
-  public getMessageById(id: number): Message {
-    return this.messages[id];
+  public addConfig(config: PortKnockConfig) {
+    config.createdAt = new Date();
+    this.configs.push(config);
+    this.persist();
+  }
+
+  public updateConfig(idConfig: number, config: PortKnockConfig) {
+    this.getConfigById(idConfig).ip = config.ip;
+    this.getConfigById(idConfig).name = config.name;
+    this.persist();
+  }
+
+  public removeConfig(id: number) {
+    this.configs.splice(id, 1);
+    this.persist();
+  }
+
+  public removeSecret(idConfig: number, idSecret: number) {
+    this.getConfigById(idConfig).secret.splice(idSecret, 1);
+    this.persist();
+  }
+
+  public addSecret(idConfig: number, secret: PortKnockSecret) {
+    this.getConfigById(idConfig).secret.push(secret);
+    this.persist();
+  }
+
+  public updateSecret(idConfig: number, idSecret: number, secret: PortKnockSecret) {
+    this.getConfigById(idConfig).secret[idSecret] = secret;
+    this.persist();
+  }
+
+  public getConfigs(): Array<PortKnockConfig> {
+    return this.configs;
+  }
+
+  public getConfigById(id: number): PortKnockConfig {
+    return this.configs[id];
+  }
+
+  private persist() {
+    this.configs.forEach((value, idx) => {
+      this.configs[idx].id = idx;
+    });
+    localStorage.setItem('configs', JSON.stringify(this.configs));
   }
 }

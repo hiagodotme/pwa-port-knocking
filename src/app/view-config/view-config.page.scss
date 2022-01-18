@@ -19,9 +19,19 @@ ion-item .date {
 }
 
 ion-item ion-icon {
-  font-size: 42px;
-  margin-right: 8px;
+
+  &.icon-cloud {
+    font-size: 42px;
+    margin-right: 8px;
+  }
+
+  &.eye-icon {
+    font-size: 35px;
+    margin-right: 20px;
+  }
+
 }
+
 
 ion-item ion-note {
   font-size: 15px;
@@ -37,4 +47,13 @@ h1 {
 
 p {
   line-height: 22px;
+}
+
+.success {
+  color: green;
+}
+
+.toast-danger {
+  background-color: #f44336;
+  color: white;
 }
