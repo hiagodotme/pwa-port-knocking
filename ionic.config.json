@@ -1,0 +1,7 @@
+{
+  "name": "portknocking",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
