@@ -9,7 +9,7 @@ $ npm i
 $ npm run build
 ```
 
-When compiling, just serve the contents of `dist/` on a WEB server, access and add the splash screen.
+When compiling, just serve the contents of `www/` on a WEB server, access and add the splash screen.
 
 ## Demo
 Você pode ver uma versão funcionando no endereço [projetos.hiago.me/port-knocking](https://projetos.hiago.me/port-knocking).
